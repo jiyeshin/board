@@ -29,9 +29,8 @@
 				<input type="file" id="file" name="file_0">
 				<a href="#this" class="btn" id="delete" name="delete">삭제</a>
 			</p>
-		</div>
-		
-		<br/><br/>
+		</div>	
+		<br/>
 		<a href="#this" class="btn" id="addFile">파일 추가</a>
 		<a href="#this" class="btn" id="write">작성하기</a>
 		<a href="#this" class="btn" id="list">목록으로</a>

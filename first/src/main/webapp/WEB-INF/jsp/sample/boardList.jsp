@@ -69,7 +69,7 @@
 			comAjax.setUrl("<c:url value='/sample/selectBoardList.do' />");
 			comAjax.setCallback("fn_selectBoardListCallback");
 			comAjax.addParam("PAGE_INDEX",$("#PAGE_INDEX").val());
-			comAjax.addParam("PAGE_ROW", 15);
+			comAjax.addParam("PAGE_ROW", 10);
 			comAjax.addParam("IDX_FE", $("#IDX_FE").val());
 			comAjax.ajax();
 		}

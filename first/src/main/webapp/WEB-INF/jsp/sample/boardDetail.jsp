@@ -54,6 +54,8 @@
 	<a href="#this" class="btn" id="update">수정하기</a>
 	
 	<%@ include file="/WEB-INF/include/include-body.jspf" %>
+	<%@ include file="/WEB-INF/jsp/comment/comment.jsp" %>
+	
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$("#list").on("click", function(e){ //목록으로 버튼

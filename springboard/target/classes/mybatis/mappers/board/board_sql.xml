@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eansoft.board.service.mapper.BoardMapper">  
+   
+    <select id="selectBoardList" parameterType="Map" resultType="BoardVO">
+       SELECT * 
+       FROM board
+       <include refid="search"/>
+	   ORDER BY code DESC
+    </select>
+    
+     <select id="selectBoardListCnt" parameterType="BoardVO" resultType="java.lang.Integer">
+        select count(*) from board
+    </select>
+    
+    <insert id="insertBoard">
+        insert into
+        board(
+        	  code
+            , title
+            , content
+            , writer
+            )
+        values(
+        	  codeseq.nextval
+            , #{title}
+            , #{content}
+            , #{writer}
+            )
+    </insert>
+    
+    <update id="updateBoard">
+        update board 
+        set   title = #{title}
+            , content = #{content}
+            , writer = #{writer}
+            , regdate = sysdate
+        where
+            code = #{code}
+    </update>
+    
+    <delete id="deleteBoard">
+        delete from board
+        where
+            code = #{code}
+    </delete>
+    
+    <select id="selectBoardByCode" parameterType="BoardVO" resultType="BoardVO">
+        select * 
+        from board
+        where
+            code = #{code}
+    </select>
+    
+    <update id="updateReadcnt" >
+        update board
+        set readcnt = readcnt + 1
+        where
+            code = #{code}
+    </update>
+    
+    <insert id="insertReply">
+        insert into
+        board(        	 
+             title
+            , content
+            , writer
+            
+            ,  code)
+        values(
+        	  
+             #{title}
+            , #{content}
+            , #{writer}
+            
+            , codeseq.nextval)
+    </insert>
+    
+   <!--  <update id="updateGroupOrd">
+       update board 
+       set groupOrd = groupOrd + 1 
+       where originNo = #{originNo} and groupOrd > #{groupOrd}
+    </update> -->
+    
+    <sql id="search">
+    	<choose>
+    		<when test = "searchOption == 'all'">   		
+    		</when>
+    		<when test = "searchOption == 'titleContent'">
+    			where title like '%'||#{keyword}||'%'
+    			or content like '%'||#{keyword}||'%'
+    		</when>
+    		<otherwise>
+    			where ${searchOption} like '%'||#{keyword}||'%'
+    			
+    		</otherwise>
+    	</choose>
+    </sql>
+    
+    
+    
+</mapper>

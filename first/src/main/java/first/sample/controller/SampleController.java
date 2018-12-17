@@ -1,14 +1,22 @@
 package first.sample.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import first.common.common.CommandMap;
@@ -54,9 +62,10 @@ public class SampleController {
 	@RequestMapping(value="/sample/insertBoard.do")
 	public ModelAndView insertBoard(CommandMap commandMap, HttpServletRequest request) throws Exception{
 		ModelAndView mv = new ModelAndView("redirect:/sample/openBoardList.do");
+		// System.out.println(commandMap.getMap());
 		
 		sampleService.insertBoard(commandMap.getMap(), request);
-		
+				
 		return mv;
 	}
 	
@@ -101,4 +110,6 @@ public class SampleController {
 		
 		return mv;
 	}
+	
+    
 }

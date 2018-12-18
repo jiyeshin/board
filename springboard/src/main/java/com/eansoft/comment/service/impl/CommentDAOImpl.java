@@ -36,7 +36,9 @@ public class CommentDAOImpl implements CommentDAO {
 
 	@Override
 	public void deleteComment(int commentcode) throws Exception {
-		// TODO Auto-generated method stub
+		CommentMapper mapper = sqlSession.getMapper(CommentMapper.class);
+		
+		mapper.deleteComment(commentcode);
 		
 	}
 

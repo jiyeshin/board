@@ -11,7 +11,7 @@ public interface BoardDAO {
      * @return
      * @throws Exception
      */
-    List<BoardVO> selectBoardList(String searchOption, String keyword) throws Exception;
+    List<BoardVO> selectBoardList(String searchOption, String keyword, int start, int end) throws Exception;
     
   //전체 리스트 개수
     public int selectBoardListCnt(BoardVO boardVO) throws Exception;

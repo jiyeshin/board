@@ -2,11 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eansoft.board.service.mapper.BoardMapper">  
    
-    <select id="selectBoardList" parameterType="Map" resultType="BoardVO">
-       SELECT * 
-       FROM board
-       <include refid="search"/>
-	   ORDER BY code DESC
+    <select id="selectBoardList" parameterType="Map" resultType="BoardVO">  
+      <include refid="pagingHeader"></include>    
+	       SELECT rownum, code, title, content, writer, regdate, readcnt  
+	       FROM board
+	       <include refid="search"/>
+		   ORDER BY code DESC, regdate DESC
+	   <include refid="pagingFooter"></include>
     </select>
     
      <select id="selectBoardListCnt" parameterType="BoardVO" resultType="java.lang.Integer">
@@ -58,7 +60,8 @@
         where
             code = #{code}
     </update>
-    
+  
+<!-- 
     <insert id="insertReply">
         insert into
         board(        	 
@@ -76,12 +79,13 @@
             , codeseq.nextval)
     </insert>
     
-   <!--  <update id="updateGroupOrd">
+     <update id="updateGroupOrd">
        update board 
        set groupOrd = groupOrd + 1 
        where originNo = #{originNo} and groupOrd > #{groupOrd}
     </update> -->
     
+    <!-- 검색 SQL -->
     <sql id="search">
     	<choose>
     		<when test = "searchOption == 'all'">   		
@@ -96,6 +100,17 @@
     		</otherwise>
     	</choose>
     </sql>
+    
+    <!-- 페이징 SQL -->
+    <sql id="pagingHeader">
+    	select * from (
+    		select rownum as rn, A.* from( 
+    </sql>
+    <sql id="pagingFooter">
+    		) A
+    	) where rn between #{start} and #{end}
+    </sql>
+    
     
     
     

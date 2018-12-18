@@ -12,7 +12,7 @@ public interface BoardService {
      * @return
      * @throws Exception
      */
-    public List<BoardVO> selectBoardList(String searchOption, String keyword) throws Exception;
+    public List<BoardVO> selectBoardList(String searchOption, String keyword, int start, int end) throws Exception;
     
     /**
      * 게시물 작성

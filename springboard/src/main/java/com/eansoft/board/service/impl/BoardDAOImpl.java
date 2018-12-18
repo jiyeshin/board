@@ -18,11 +18,16 @@ public class BoardDAOImpl implements BoardDAO {
 	private SqlSession sqlSession;
 	
 	@Override
-	public List<BoardVO> selectBoardList(String searchOption, String keyword) throws Exception {
+	public List<BoardVO> selectBoardList(String searchOption, String keyword, int start, int end) throws Exception {
         BoardMapper mapper = sqlSession.getMapper(BoardMapper.class);
         Map<String,Object> map = new HashMap<>();
+        // 검색 설정 
         map.put("searchOption", searchOption);
         map.put("keyword", keyword);
+        
+        // 페이징 설정 
+        map.put("start", start);
+        map.put("end", end);
         
         return mapper.selectBoardList(map);
     }

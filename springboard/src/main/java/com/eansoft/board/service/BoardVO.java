@@ -15,7 +15,14 @@ public class BoardVO {
 	private String regdate;		// 게시글 등록일 
 	private int readcnt;		// 게시글 조회수
 	private int commentcnt;		// 댓글 수 
+	private String[] files;
 	
+	public String[] getFiles() {
+		return files;
+	}
+	public void setFiles(String[] files) {
+		this.files = files;
+	}
 	/*
      * 
      *  

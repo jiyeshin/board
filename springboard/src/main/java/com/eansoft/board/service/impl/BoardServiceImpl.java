@@ -14,9 +14,9 @@ public class BoardServiceImpl implements BoardService {
 	private BoardDAO boardDAOService;
 
 	@Override
-	public List<BoardVO> selectBoardList(String searchOption, String keyword) throws Exception {
+	public List<BoardVO> selectBoardList(String searchOption, String keyword, int start, int end) throws Exception {
 		List<BoardVO> list = null;
-		list = boardDAOService.selectBoardList(searchOption, keyword);
+		list = boardDAOService.selectBoardList(searchOption, keyword, start, end);
 		return list;
 	}
 	

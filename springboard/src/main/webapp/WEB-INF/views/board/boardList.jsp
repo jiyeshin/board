@@ -68,7 +68,6 @@
 					글쓴이</option>
 			</select> <input name="keyword" value="${keyword}"> <input
 				type="submit" value="검색">
-
 		</form>
 		<div>
 			<a href='#' onClick='fn_write()' class="btn btn-success">글쓰기</a>
@@ -76,47 +75,57 @@
 
 
 		<div>
-			<c:if test="${pagination.curRange ne 1 }">
-				<a href="#" onClick="fn_paging(1)">[처음]</a>
+		<!--  처음 페이지로 이동: 현재 페이지가 1보다 크면 [처음]을 화면에 출력 -->
+			<c:if test="${boardPager.curBlock > 1 }">
+				<a href="javascript:list('1')">[처음]</a>
 			</c:if>
-			<c:if test="${pagination.curPage ne 1}">
-				<a href="#" onClick="fn_paging('${pagination.prevPage }')">[이전]</a>
+			
+			<!-- 이전 페이지 블록으로 이동: 현재 페이지 블록이 1보다 크면 [이전]을 화면에 출력 -->
+			<c:if test="${boardPager.curPage > 1}">
+				<a href="javascript:list('${boardPager.prevPage}')">[이전]</a>
 			</c:if>
-			<c:forEach var="pageNum" begin="${pagination.startPage }"
-				end="${pagination.endPage }">
+			
+			<!-- 하나의 블록에서 반복문 수행: 시작 페이지부터 끝 페이지까지 -->
+			<c:forEach var="pageNum" begin="${boardPager.blockBegin}" end="${boardPager.blockEnd}">
 				<c:choose>
-					<c:when test="${pageNum eq  pagination.curPage}">
-						<span style="font-weight: bold;"><a href="#"
-							onClick="fn_paging('${pageNum }')">${pageNum }</a></span>
+					<c:when test="${pageNum eq  boardPager.curPage}">
+						<span style="font-weight: bold;">${pageNum}</span>&nbsp;
 					</c:when>
 					<c:otherwise>
-						<a href="#" onClick="fn_paging('${pageNum }')">${pageNum }</a>
+						<a href="javascript:list('${pageNum}')">${pageNum }</a>&nbsp;
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>
+			
+			<!-- 다음 페이지 블록으로 이동: 현재 페이지 블록이 전체 페이지 블록보다 작거나 같으면 [다음]을 화면에 출력 -->
 			<c:if
-				test="${pagination.curPage ne pagination.pageCnt && pagination.pageCnt > 0}">
-				<a href="#" onClick="fn_paging('${pagination.nextPage }')">[다음]</a>
+				test="${boardPager.curBlock <= boardPager.totalBlock}">
+				<a href="javascript:list('${boardPager.nextPage}')">[다음]</a>
 			</c:if>
+			
+			<!-- 끝 페이지로 이도: 현재 페이지가 전체 페이지보다 작거나 같으면 [끝]을 화면에 출력 -->
 			<c:if
-				test="${pagination.curRange ne pagination.rangeCnt && pagination.rangeCnt > 0}">
-				<a href="#" onClick="fn_paging('${pagination.pageCnt }')">[끝]</a>
+				test="${boardPager.curPage <= boardPager.totalPage}">
+				<a href="javascript:list('${boardPager.totalPage}')">[끝]</a>
 			</c:if>
 		</div>
 
-		<div>총 게시글 수 : ${pagination.listCnt } / 총 페이지 수 :
-			${pagination.pageCnt } / 현재 페이지 : ${pagination.curPage } / 현재 블럭 :
-			${pagination.curRange } / 총 블럭 수 : ${pagination.rangeCnt }</div>
+		
 
-		<script>
+<script>
+//원하는 페이지로 이동 시 검색조건, 키워드 값을 유기하기 위해
+function list(page){
+	location.href = "${path}/board/boardList.do?curPage=" + page + "&searchOption=${searchOption}&keyword=${keyword}";
+}
+
+
 //글쓰기
 function fn_write(){
     
     var form = document.getElementById("boardForm");
     
     form.action = "<c:url value='/writeForm.do'/>";
-    form.submit();
-    
+    form.submit();   
 }
  
 //글조회

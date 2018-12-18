@@ -1,5 +1,6 @@
 package com.eansoft.board.web;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.eansoft.board.Pagination;
+import com.eansoft.board.service.BoardPager;
 import com.eansoft.board.service.BoardVO;
 import com.eansoft.board.service.impl.BoardService;
 
@@ -22,74 +23,59 @@ public class BoardController {
 	@Autowired
 	private BoardService boardServiceImpl;
 	
-    /**
-     * 게시판 조회
-     * @param boardVO
-     * @param model
-     * @return
-     * @throws Exception
-     */
+
+     // 게시판 전체 리스트
     @RequestMapping(value="/boardList.do")
-    public String boardList(@ModelAttribute("boardVO") BoardVO boardVO, Model model, 
-    		@RequestParam(defaultValue="1") int curPage, 
+    public String boardList(@ModelAttribute("boardVO") BoardVO boardVO, Model model, 		 
     		@RequestParam(defaultValue="all") String searchOption, 
-    		@RequestParam(defaultValue="") String keyword,
-            HttpServletRequest request) throws Exception{  	
+    		@RequestParam(defaultValue="") String keyword, 
+    		@RequestParam(defaultValue="1")int curPage
+            ) throws Exception{  	
         
         // 전체리스트 개수
-        int listCnt = boardServiceImpl.selectBoardListCnt(boardVO);
+        int count = boardServiceImpl.selectBoardListCnt(boardVO);
         
-        Pagination pagination = new Pagination(listCnt, curPage);
-        
-        boardVO.setStartIndex(pagination.getStartIndex());
-        boardVO.setCntPerPage(pagination.getPageSize());
- 
-     // 전체리스트 조회
-        List<BoardVO> list = boardServiceImpl.selectBoardList(searchOption, keyword);
-     //   System.out.println(searchOption + "  " + keyword);
-     //   System.out.println(list);        
-        
+        // 페이지 나누기 관련 처리
+        BoardPager boardPager = new BoardPager(count, curPage);
+        int start = boardPager.getPageBegin();
+        int end = boardPager.getPageEnd();
+
+        // 전체리스트 조회
+        List<BoardVO> list = boardServiceImpl.selectBoardList(searchOption, keyword, start, end);
+      
+       /* Map <String, Object> map = new HashMap<>();
+        map.put("list", list);
+        map.put("listCnt", count);
+        map.put("searchOption", searchOption);
+        map.put("keyword", keyword);
+        map.put("boardPager", boardPager);*/
+       
         model.addAttribute("list", list);
-        model.addAttribute("listCnt", listCnt);
-        model.addAttribute("pagination", pagination);
-        
+        model.addAttribute("listCnt", count);
+        model.addAttribute("boardPager", boardPager);
+
+      
         return "board/boardList";
     }
     
-    /**
-     * 글쓰기 페이지로 이동
-     * @return
-     * @throws Exception
-     */
+
+     // 글쓰기 페이지로 이동
     @RequestMapping(value="/writeForm.do")
     public String writeBoardForm() throws Exception{
         
         return "board/writeForm";
     }
     
-    /**
-     * 게시글 등록
-     * @param boardVO
-     * @param model
-     * @return
-     * @throws Exception
-     */
+    // 게시글 등록 
     @RequestMapping(value="/write.do")
-    public String write(@ModelAttribute("boardVO") BoardVO boardVO, Model model) throws Exception{
+    public String write(@ModelAttribute("boardVO") BoardVO boardVO, Model model, HttpServletRequest request) throws Exception{
         
         boardServiceImpl.insertBoard(boardVO);
         
         return "redirect:/boardList.do";
     }
     
-    /**
-     * 게시글 조회
-     * @param boardVO
-     * @param model
-     * @param request
-     * @return
-     * @throws Exception
-     */
+    // 게시글 조회
     @RequestMapping(value="/viewContent.do")
     public String viewForm(@ModelAttribute("boardVO") BoardVO boardVO, Model model, HttpServletRequest request) throws Exception{
         
@@ -107,13 +93,7 @@ public class BoardController {
         return "board/viewForm";
     }
     
-    /**
-     * 게시글 수정
-     * @param boardVO
-     * @param model
-     * @return
-     * @throws Exception
-     */
+    // 게시글 수정
     @RequestMapping(value="/updateboard.do")
     public String updateBoard(@ModelAttribute("boardVO") BoardVO boardVO, Model model) throws Exception{
         
@@ -128,13 +108,7 @@ public class BoardController {
         return "redirect:/boardList.do";       
     }
    
-    /**
-     * 게시글 수정 페이지로 이동
-     * @param boardVO
-     * @param model
-     * @return
-     * @throws Exception
-     */
+    // 게시글 수정 페이지로 이동
     @RequestMapping(value="/update.do")
     public String updateView(@ModelAttribute("boardVO") BoardVO boardVO, Model model) throws Exception{
             
@@ -143,14 +117,7 @@ public class BoardController {
         return "board/updateForm";      
     }
     
-    /**
-     * 게시글 삭제
-     * @param boardVO
-     * @param model
-     * @param request
-     * @return
-     * @throws Exception
-     */
+    //게시글 삭제
     @RequestMapping(value="/deleteBoard.do")
     public String deleteBoard(@ModelAttribute("boardVO") BoardVO boardVO, Model model, HttpServletRequest request) throws Exception{
         

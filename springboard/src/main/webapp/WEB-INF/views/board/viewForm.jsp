@@ -76,9 +76,8 @@ function fn_cancel(){
     
     var form = document.getElementById("viewForm");
     
-    form.action = "<c:url value='/boardList.do'/>";
-    form.submit();
-    
+    form.action = "<c:url value='/boardList.do?curPage=${curPage}&searchOption=${searchOption}&keyword=${keyword}'/>";
+    form.submit();   
 }
  
 //수정
@@ -106,8 +105,7 @@ function fn_delete(){
     var form = document.getElementById("viewForm");
     
     form.action = "<c:url value='/deleteBoard.do'/>";
-    form.submit();
-    
+    form.submit();   
 }
 
 //댓글 등록
@@ -127,6 +125,20 @@ function fn_commentinsert(){
 	});
 }
 
+//댓글 등록
+function fn_commentdelete(){
+	var commentcode = "${result.commentcode}";	
+	var param = "commentcode="+commentcode;
+	$.ajax({
+		type		: "get",
+		data		: param,
+		url			: "comment/delete.do",
+		success		: function(){
+			alert("댓글이 삭제되었습니다.");
+			listComment();
+		}			
+	});
+}
 
 // 댓글 목록 
 function listComment(){
@@ -139,7 +151,10 @@ function listComment(){
 			for(var i in result){
 				output +="<tr>";
 				output +="<td>" + (i) + "." + result[i].commentwriter + ":" ;
-				output += result[i].comments + "</td>";
+				output += result[i].comments;
+				output += "<a href='#' onClick='fn_commentupdate()'>수정</a>";				
+				output += "<a href='#' onClick='fn_commentdelete()'>삭제</a>";			
+				output += "</td>"
 				output += "</tr>";
 			}
 			output += "</table>";
@@ -147,6 +162,10 @@ function listComment(){
 		}			
 	});
 }
+
+
+
+
 
 </script>
 </div>
